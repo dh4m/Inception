@@ -15,4 +15,4 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 
 # nginx를 포어그라운드에서 실행, 이를 통해 컨테이너가 nginx가 실행되는 동안 종료되지 않음
-nginx -g "daemon off;"
+exec nginx -g "daemon off;"

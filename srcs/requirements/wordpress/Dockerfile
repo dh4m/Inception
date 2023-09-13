@@ -10,7 +10,29 @@ RUN apt-get update \
     && apt-get install -y curl unzip php-fpm php-mysql php-xml php-gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN curl -o wordpress.tar.gz -SL https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz && \
-    echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c - && \
-    tar -xzf wordpress.tar.gz -C /etc/wordpress/ && \
-    rm wordpress.tar.gz
+# curl 명령어를 통해 wordpress 압축 파일을 다운받고 sha로 검증한 후 압축을 풀어 설치
+RUN curl -o wordpress.tar.gz -SL https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz \
+    && echo "$WORDPRESS_SHA1 wordpress.tar.gz" | sha1sum -c - \
+    && tar -xzf wordpress.tar.gz -C /etc/wordpress/ \
+    && rm wordpress.tar.gz \
+    && mkdir -p /var/www/html
+
+# /var/www/html폴더의 소유자와 그룹을 www-data로 변경, 
+# www-data란 일반적으로 웹 서버 프로세스를 실행하는 데 사용되는 표준 소유자와 그룹 이름
+RUN chown -R www-data:www-data /var/www/html
+
+# 설정 파일 임시 복사
+COPY ./conf/www.conf /tmp/config/www.conf
+
+# 설정 파일 복사
+RUN PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;") \
+    && cp /tmp/config/www.conf /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
+    && rm -rf /tmp/config/www.conf
+
+# init 쉘 스크립트 복사
+COPY ./tools/wp_init.sh /etc/wp_init.sh
+# init 쉘 스크립트 실행 권한 부여
+RUN chmod +x /etc/wp_init.sh
+
+# init 쉘 스크립트 실행
+CMD ["/etc/wp_init.sh"]
