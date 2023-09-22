@@ -1,6 +1,9 @@
 # 데비안 bullseye이미지를 기반으로 함
 FROM debian:bullseye-slim
 
+# 9000 포트 열기
+EXPOSE 9000
+
 # wordpress 버전 6.3.1(latest) 사용 및 해당 버전의 sha1
 ENV WORDPRESS_VERSION 6.3.1
 ENV WORDPRESS_SHA1 052777aef40e7f627c63c8a26eefe37b843a44df
@@ -19,7 +22,8 @@ RUN curl -o wordpress.tar.gz -SL https://wordpress.org/wordpress-${WORDPRESS_VER
 
 # /var/www/html폴더의 소유자와 그룹을 www-data로 변경, 
 # www-data란 일반적으로 웹 서버 프로세스를 실행하는 데 사용되는 표준 소유자와 그룹 이름
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
 # 설정 파일 임시 복사
 COPY ./conf/www.conf /tmp/config/www.conf

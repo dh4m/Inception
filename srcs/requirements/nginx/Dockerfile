@@ -11,7 +11,7 @@ RUN apt-get update \
     && mkdir -p /etc/nginx/ssl
 
 # 설정 파일 복사
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/http.d/default.conf
 
 # init 쉘 스크립트 복사
 COPY ./tools/nginx_init.sh /etc/nginx_init.sh

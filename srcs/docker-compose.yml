@@ -1,44 +1,73 @@
-version: '3'
+version: '3' # docker compose version
 
 services:
-  nginx:
+  nginx: # nginx container
     build:
-      context: .
-      dockerfile: ./nginx/Dockerfile
+      context: ./requirements/nginx/ # Dockerfile folder
+      dockerfile: Dockerfile
     ports:
-      - "443:443"
+      - "443:443" # host 443 port로 연결
     volumes:
-      - /home/login/data/nginx:/etc/nginx
+      - wordpress_volume:/var/www/html
     networks:
       - nginx-wordpress-network
+    restart: on-failure
+    env_file: .env
+    image: nginx
+    container_name: nginx
+    pull_policy: never
 
-  wordpress-phpfpm:
+  wordpress:
     build:
-      context: .
-      dockerfile: ./wordpress/Dockerfile
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
     expose:
       - "9000"
     volumes:
-      - /home/login/data/nginx:/var/www/html
+      - wordpress_volume:/var/www/html
     networks:
       - nginx-wordpress-network
       - wordpress-mariadb-network
+    restart: on-failure
+    env_file: .env
+    image: wordpress
+    container_name: wordpress
+    pull_policy: never
     depends_on:
       - mariadb
 
   mariadb:
     build:
-      context: .
-      dockerfile: ./mariadb/Dockerfile
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
     expose:
       - "3306"
     volumes:
-      - /home/login/data/mariadb:/var/lib/mysql
+      - mariadb_volume:/var/lib/mysql
     networks:
       - wordpress-mariadb-network
+    restart: on-failure
+    env_file: .env
+    image: mariadb
+    container_name: mariadb
+    pull_policy: never
 
 networks:
   nginx-wordpress-network:
     driver: bridge
   wordpress-mariadb-network:
     driver: bridge
+
+volumes:
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/wordpress
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/mariadb
