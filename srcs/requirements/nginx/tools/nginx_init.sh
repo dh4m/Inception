@@ -1,6 +1,8 @@
 #!/bin/bash
+set -e # 스크립트 실패 시 실행을 종료
 
 # openssl을 사용한 인증서 생성
+echo "create certificate.."
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 		-subj "/C=KR/ST=Seoul/O=42Seoul/CN=dham.42.fr" \
 		-keyout /etc/nginx/ssl/my_inception_nginx.key \
@@ -12,6 +14,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 # -subj "/C=KR/ST=Seoul/O=42Seoul/CN=dham.42.fr": 한국 서울의 42서울에서 생성한 인증서이며 dhan.42.fr도메인에 적용됨
 # -keyout /etc/ssl/private/nginx-selfsigned.key: 키를 해당 경로에 저장
 # -out /etc/nginx/ssl/my_inception_nginx.crt: 인증서를 해당 경로에 저장
+echo "complete create certificate"
 
 
 # nginx를 포어그라운드에서 실행, 이를 통해 컨테이너가 nginx가 실행되는 동안 종료되지 않음
