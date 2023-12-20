@@ -29,14 +29,8 @@ RUN chown -R www-data:www-data /var/www/html \
 COPY ./conf/www.conf /tmp/config/www.conf
 
 # 설정 파일 복사
-RUN PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;") \
-    && cp /tmp/config/www.conf /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
+RUN cp /tmp/config/www.conf /etc/php/7.4/fpm/pool.d/www.conf \
     && rm -rf /tmp/config/www.conf
 
-# init 쉘 스크립트 복사
-COPY ./tools/wp_init.sh /etc/wp_init.sh
-# init 쉘 스크립트 실행 권한 부여
-RUN chmod +x /etc/wp_init.sh
-
 # init 쉘 스크립트 실행
-CMD ["/etc/wp_init.sh"]
+CMD ["php-fpm -F"]
