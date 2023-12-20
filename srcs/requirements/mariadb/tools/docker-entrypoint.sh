@@ -1,17 +1,16 @@
 #!/bin/bash
 set -e # 스크립트 실패 시 실행을 종료
 
-# 초기화 sql file 생성
-touch /var/run/mysqld/initialize_db.sql
-
-cat >/var/run/mysqld/initialize_db.sql <<EOF
+mysqld --defaults-file=/etc/mysql/my.cnf --bootstrap --verbose <<EOF
+FLUSH PRIVILEGES;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 FLUSH PRIVILEGES;
-CREATE DATABASE '${MYSQL_DATABASE}' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE ${MYSQL_DATABASE} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-GRANT ALL PRIVILEGES ON '${MYSQL_DATABASE}'.'*' TO '${MYSQL_USER}'@'%';
+GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
+
 # ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 # ALTER USER눈 사용자의 속성을 변경. 해당 구문은 root 사용자의 비밀번호를 변경함
 # FLUSH PRIVILEGES;
@@ -25,8 +24,6 @@ EOF
 
 # mysqld: 데이터베이스 서버 자체를 실행하는 데 사용되는 주요 실행 파일
 # mysqld --initialize: 초기화 작업 수행, 이 경우 init-file을 초기화 마무리 시 수행
-mysqld --defaults-file=/etc/mysql/my.cnf --init-file=/var/run/mysqld/initialize_db.sql \
-    --initialize-insecure --user=mysql
 
 # mysql 사용자로 하여 mysql 서버 실행
 exec mysqld --user=mysql

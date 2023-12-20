@@ -14,7 +14,7 @@ RUN apt-get update \
 # 설정 파일 복사
 COPY ./conf/my.cnf /etc/mysql/my.cnf
 # init 쉘 스크립트 복사 후 실행 권한 부여
-COPY --chmod=+x ./tools/docker-entrypoint.sh /etc/docker-entrypoint.sh
+COPY --chmod=755 ./tools/docker-entrypoint.sh /etc/docker-entrypoint.sh
 
 # 3306 포트를 엶
 EXPOSE 3306
@@ -24,4 +24,4 @@ EXPOSE 3306
 # 단일 어플리케이션의 경우 시그널 처리, 자식 프로세스 관리 등을 제대로 수행할 수 없음
 # 따라서 프로세스 관리 툴인 dumb-init을 실행하고 그 자식으로 어플리케이션을 실행함
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["/etc/mariadb_init.sh"]
+CMD ["/etc/docker-entrypoint.sh"]
