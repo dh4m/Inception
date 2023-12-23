@@ -2,6 +2,9 @@ version: '3' # docker compose version
 
 services:
   nginx: # nginx container
+    image: nginx
+    container_name: nginx
+    pull_policy: never
     build:
       context: ./requirements/nginx/ # Dockerfile folder
       dockerfile: Dockerfile
@@ -13,11 +16,13 @@ services:
       - nginx-wordpress-network
     restart: on-failure
     env_file: .env
-    image: nginx
-    container_name: nginx
-    pull_policy: never
+    depends_on:
+      - wordpress
 
   wordpress:
+    image: wordpress
+    container_name: wordpress
+    pull_policy: never
     build:
       context: ./requirements/wordpress/
       dockerfile: Dockerfile
@@ -30,13 +35,13 @@ services:
       - wordpress-mariadb-network
     restart: on-failure
     env_file: .env
-    image: wordpress
-    container_name: wordpress
-    pull_policy: never
     depends_on:
       - mariadb
 
   mariadb:
+    image: mariadb
+    container_name: mariadb
+    pull_policy: never
     build:
       context: ./requirements/mariadb/
       dockerfile: Dockerfile
@@ -48,9 +53,6 @@ services:
       - wordpress-mariadb-network
     restart: on-failure
     env_file: .env
-    image: mariadb
-    container_name: mariadb
-    pull_policy: never
 
 networks:
   nginx-wordpress-network:
@@ -64,10 +66,12 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/${USER}/data/wordpress
+      device: /Users/${USER}/docker-data/wordpress # mac
+      # device: /home/${USER}/data/wordpress # linux
   mariadb_volume:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/${USER}/data/mariadb
+      device: /Users/${USER}/docker-data/mariadb # mac
+      # device: /home/${USER}/data/mariadb # linux
