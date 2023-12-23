@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e # 스크립트 실패 시 실행을 종료
 
 mysqld --defaults-file=/etc/mysql/my.cnf --bootstrap --verbose <<EOF
 FLUSH PRIVILEGES;
@@ -26,4 +25,4 @@ EOF
 # mysqld --initialize: 초기화 작업 수행, 이 경우 init-file을 초기화 마무리 시 수행
 
 # mysql 사용자로 하여 mysql 서버 실행
-exec mysqld --user=mysql
+exec mysqld --defaults-file=/etc/mysql/my.cnf --user=mysql
