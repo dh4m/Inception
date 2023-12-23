@@ -10,7 +10,7 @@ WORKDIR /var/www/html
 # /var/www/html폴더의 소유자와 그룹을 www-data로 변경
 # www-data란 일반적으로 웹 서버 프로세스를 실행하는 데 사용되는 표준 소유자와 그룹 이름
 RUN apt-get update \
-    && apt-get install -y php7.4 php7.4-fpm php7.4-gd php7.4-json php7.4-mysql php7.4-curl php7.4-mbstring php7.4-intl php-imagick php7.4-xml php7.4-zip mariadb-client \
+    && apt-get install -y curl php7.4 php7.4-fpm php7.4-gd php7.4-json php7.4-mysql php7.4-curl php7.4-mbstring php7.4-intl php-imagick php7.4-xml php7.4-zip mariadb-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/www/html /run/php \
     && chown -R www-data:www-data /var/www/html \
