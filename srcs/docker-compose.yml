@@ -46,6 +46,7 @@ services:
       timeout: 30s
       retries: 5
       start_period: 10s
+      start_interval: 2s
 
   mariadb:
     image: mariadb
@@ -68,6 +69,7 @@ services:
       timeout: 30s
       retries: 5
       start_period: 10s
+      start_interval: 2s
 
 networks:
   nginx-wordpress-network:
