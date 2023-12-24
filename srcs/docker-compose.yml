@@ -17,7 +17,9 @@ services:
     restart: on-failure
     env_file: .env
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
+
 
   wordpress:
     image: wordpress
@@ -36,7 +38,14 @@ services:
     restart: on-failure
     env_file: .env
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wp core is-installed || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
 
   mariadb:
     image: mariadb
@@ -53,6 +62,12 @@ services:
       - wordpress-mariadb-network
     restart: on-failure
     env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -hlocalhost -uroot || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
 
 networks:
   nginx-wordpress-network:
