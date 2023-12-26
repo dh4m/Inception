@@ -4,6 +4,10 @@ set -e
 
 chmod +x /usr/local/bin/wp
 
+if wp core is-installed --allow-root; then;
+	exec php-fpm7.4 -F
+fi
+
 wp core download --version=6.4.2 --path=/var/www/html --allow-root \
 && wp config create \
     --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_USER} --dbpass=${MYSQL_PASSWORD} --dbhost=${MYSQL_HOST} --allow-root \
