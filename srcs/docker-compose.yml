@@ -13,7 +13,9 @@ services:
     volumes:
       - wordpress_volume:/var/www/html
     networks:
-      - nginx-wordpress-network
+      nginx-wordpress-network:
+        aliases:
+          - dham.42.fr
     restart: on-failure
     env_file: .env
     depends_on:

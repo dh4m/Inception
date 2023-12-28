@@ -33,6 +33,7 @@ clean:
 
 fclean:
 	make clean
+	docker builder prune -f
 	sudo rm -rf $(DATA_DIR)
 	docker volume rm $$(docker volume ls -q)
 # $$는 $를 이스케이프하기 위한 것으로, 쉘에서 $를 쓴 것과 동일함
