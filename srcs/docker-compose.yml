@@ -13,9 +13,9 @@ services:
     volumes:
       - wordpress_volume:/var/www/html
     networks:
-      nginx-wordpress-network:
-        aliases:
-          - dham.42.fr
+      inception-network:
+        aliases: 
+          - ${DOMAIN_NAME}
     restart: on-failure
     env_file: .env
     depends_on:
@@ -35,8 +35,7 @@ services:
     volumes:
       - wordpress_volume:/var/www/html
     networks:
-      - nginx-wordpress-network
-      - wordpress-mariadb-network
+      - inception-network
     restart: on-failure
     env_file: .env
     depends_on:
@@ -61,7 +60,7 @@ services:
     volumes:
       - mariadb_volume:/var/lib/mysql
     networks:
-      - wordpress-mariadb-network
+      - inception-network
     restart: on-failure
     env_file: .env
     healthcheck:
@@ -72,9 +71,7 @@ services:
       start_period: 10s
 
 networks:
-  nginx-wordpress-network:
-    driver: bridge
-  wordpress-mariadb-network:
+  inception-network:
     driver: bridge
 
 volumes:
