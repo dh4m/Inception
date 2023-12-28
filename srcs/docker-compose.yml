@@ -16,7 +16,7 @@ services:
       inception-network:
         aliases: 
           - ${DOMAIN_NAME}
-    restart: on-failure
+    restart: always
     env_file: .env
     depends_on:
       wordpress:
@@ -36,15 +36,15 @@ services:
       - wordpress_volume:/var/www/html
     networks:
       - inception-network
-    restart: on-failure
+    restart: always
     env_file: .env
     depends_on:
       mariadb:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wp core is-installed --allow-root || exit 1"]
-      interval: 30s
-      timeout: 30s
+      interval: 5s
+      timeout: 5s
       retries: 5
       start_period: 10s
 
@@ -61,12 +61,12 @@ services:
       - mariadb_volume:/var/lib/mysql
     networks:
       - inception-network
-    restart: on-failure
+    restart: always
     env_file: .env
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -hlocalhost -udham -p${MYSQL_PASSWORD} || exit 1"]
-      interval: 30s
-      timeout: 30s
+      interval: 5s
+      timeout: 5s
       retries: 5
       start_period: 10s
 
