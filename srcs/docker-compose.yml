@@ -2,7 +2,7 @@ version: '3' # docker compose version
 
 services:
   nginx: # nginx container
-    image: nginx
+    image: nginx:inception
     container_name: nginx
     pull_policy: never
     build:
@@ -22,7 +22,7 @@ services:
 
 
   wordpress:
-    image: wordpress
+    image: wordpress:inception
     container_name: wordpress
     pull_policy: never
     build:
@@ -48,7 +48,7 @@ services:
       start_period: 10s
 
   mariadb:
-    image: mariadb
+    image: mariadb:inception
     container_name: mariadb
     pull_policy: never
     build:
