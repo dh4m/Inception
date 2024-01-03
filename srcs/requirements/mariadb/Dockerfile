@@ -4,12 +4,12 @@ FROM debian:bullseye-slim
 # apt로 mariadb와 dumb-init 을 설치 및 폴더 생성
 # /var/lib/mysql: 실제 데이터 파일이 저장되는 곳
 # /var/run/mysqld: 실행 관련 임시파일이 저장되는 곳(서버의 소켓 파일 등), 재부팅 시 초기화
-RUN apt-get update \
-    && apt-get install -y mariadb-server dumb-init \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /var/lib/mysql /var/run/mysqld \
-    && chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
-    && chmod 777 /var/run/mysqld
+RUN apt-get update; \
+    apt-get install -y mariadb-server dumb-init; \
+    apt-get clean; rm -rf /var/lib/apt/lists/*; \
+    mkdir -p /var/lib/mysql /var/run/mysqld; \
+    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
+    chmod 777 /var/run/mysqld;
 
 # 설정 파일 복사
 COPY ./conf/my.cnf /etc/mysql/my.cnf
