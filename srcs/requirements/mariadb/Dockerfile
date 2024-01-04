@@ -6,8 +6,9 @@ FROM debian:bullseye-slim
 # /var/run/mysqld: 실행 관련 임시파일이 저장되는 곳(서버의 소켓 파일 등), 재부팅 시 초기화
 RUN apt-get update; \
     apt-get install -y mariadb-server dumb-init; \
-    apt-get clean; rm -rf /var/lib/apt/lists/*; \
+    apt-get clean && rm -rf /var/lib/apt/lists/*; \
     mkdir -p /var/lib/mysql /var/run/mysqld; \
+    groupadd mysql; useradd -G mysql mysql; \
     chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
     chmod 777 /var/run/mysqld;
 
