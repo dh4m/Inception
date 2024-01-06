@@ -45,10 +45,10 @@ bash:
 	docker exec -it $(SERVICE) /bin/bash
 
 show: 
-	docker ps -a | tail -n +1
-	docker images | tail -n +1
-	docker network ls | tail -n +1
-	docker volume ls | tail -n +1
+	docker ps -a | tail -n +1; echo
+	docker images | tail -n +1; echo
+	docker network ls | tail -n +1; echo
+	docker volume ls | tail -n +1; echo
 
 makeDirs:
 	mkdir -p $(DATA_DIR)/wordpress $(DATA_DIR)/mariadb > /dev/null 2>&1
