@@ -2,28 +2,28 @@ version: '3' # docker compose version
 
 services:
   nginx: # nginx container
-    image: nginx:inception
+    image: nginx:inception # tag로 inception사용 (default가 lastest이므로)
     container_name: nginx
-    pull_policy: never
+    pull_policy: never # dockerhub등에서 이미지 받아오지 않음
     build:
       context: ./requirements/nginx/ # Dockerfile folder
       dockerfile: Dockerfile
     ports:
       - "443:443" # host 443 port로 연결
     volumes:
-      - wordpress_volume:/var/www/html
+      - wordpress_volume:/var/www/html # 컨테이너 내부 볼륨을 로컬 디렉토리에 바인딩
     networks:
-      inception-network:
-        aliases: 
+      inception-network: # inception 네트워크 사용
+        aliases: # 네트워크 별칭 사용, wordpress에서 nginx를 통해 api호출과 loopback테스트를 하기 위함
           - ${DOMAIN_NAME}
-    restart: always
+    restart: always # 시스템 부팅 및 오류로 인한 실패 시 컨테이너 재시작
     env_file: .env
     depends_on:
       wordpress:
-        condition: service_healthy
+        condition: service_healthy # wordpress가 정상작동 할 경우 nginx 컨테이너를 올림
 
 
-  wordpress:
+  wordpress: # wordpress container
     image: wordpress:inception
     container_name: wordpress
     pull_policy: never
@@ -31,7 +31,7 @@ services:
       context: ./requirements/wordpress/
       dockerfile: Dockerfile
     expose:
-      - "9000"
+      - "9000" # 내부적으로 9000포트 사용
     volumes:
       - wordpress_volume:/var/www/html
     networks:
@@ -41,14 +41,14 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "wp core is-installed --allow-root || exit 1"]
+    healthcheck: # 정상작동 중인지 체크
+      test: ["CMD-SHELL", "wp core is-installed --allow-root || exit 1"] # wordpress가 정상적으로 설치되어 있음
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
 
-  mariadb:
+  mariadb: # mariadb container
     image: mariadb:inception
     container_name: mariadb
     pull_policy: never
@@ -64,25 +64,25 @@ services:
     restart: always
     env_file: .env
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -hlocalhost -udham -p${MYSQL_PASSWORD} || exit 1"]
+      test: ["CMD-SHELL", "mysqladmin ping -hlocalhost -udham -p${MYSQL_PASSWORD} || exit 1"] # db가 핑에 정상적으로 반응함
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
 
 networks:
-  inception-network:
-    driver: bridge
+  inception-network: # inception network 생성
+    driver: bridge # bridge driver, 호스트에 노출되지 않는 네트워크를 생성
 
 volumes:
-  wordpress_volume:
+  wordpress_volume: # wordpress volume
     driver: local
     driver_opts:
       type: none
       o: bind
       # device: /Users/${USER}/docker-data/wordpress # mac
       device: /home/${USER}/data/wordpress # linux
-  mariadb_volume:
+  mariadb_volume: # mariadb volume
     driver: local
     driver_opts:
       type: none

@@ -16,7 +16,9 @@ RUN apt-get update; \
 
 # 설정 파일 임시 복사
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+# wp-cli 다운로드
 ADD https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar /usr/local/bin/wp
+# init 쉘 스크립트 복사
 COPY --chmod=755 ./tools/docker-entrypoint.sh /etc/docker-entrypoint.sh
 
 # init 쉘 스크립트 실행
