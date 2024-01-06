@@ -12,10 +12,7 @@ WORKDIR /var/www/html
 RUN apt-get update; \
     apt-get install -y curl php7.4 php7.4-fpm php7.4-gd php7.4-json php7.4-mysql php7.4-curl php7.4-mbstring php7.4-intl php-imagick php7.4-xml php7.4-zip mariadb-client; \
     apt-get clean && rm -rf /var/lib/apt/lists/*; \
-    mkdir -p /var/www/html /run/php; \
-    groupadd www-data; useradd -G www-data www-data; \
-    chown -R www-data:www-data /var/www/html; \
-    chmod -R 755 /var/www/html;
+    mkdir -p /var/www/html /run/php;
 
 # 설정 파일 임시 복사
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf

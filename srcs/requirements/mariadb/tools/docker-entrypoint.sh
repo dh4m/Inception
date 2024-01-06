@@ -24,5 +24,8 @@ EOF
 # mysqld: 데이터베이스 서버 자체를 실행하는 데 사용되는 주요 실행 파일
 # mysqld --initialize: 초기화 작업 수행, 이 경우 init-file을 초기화 마무리 시 수행
 
+chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
+chmod 777 /var/run/mysqld
+
 # mysql 사용자로 하여 mysql 서버 실행
 exec mysqld --defaults-file=/etc/mysql/my.cnf --user=mysql

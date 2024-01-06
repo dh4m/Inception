@@ -7,10 +7,7 @@ FROM debian:bullseye-slim
 RUN apt-get update; \
     apt-get install -y mariadb-server dumb-init; \
     apt-get clean && rm -rf /var/lib/apt/lists/*; \
-    mkdir -p /var/lib/mysql /var/run/mysqld; \
-    groupadd mysql; useradd -G mysql mysql; \
-    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
-    chmod 777 /var/run/mysqld;
+    mkdir -p /var/lib/mysql /var/run/mysqld;
 
 # 설정 파일 복사
 COPY ./conf/my.cnf /etc/mysql/my.cnf

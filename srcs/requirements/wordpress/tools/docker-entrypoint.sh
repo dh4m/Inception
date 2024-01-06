@@ -20,4 +20,7 @@ wp core download --version=6.4.2 --path=/var/www/html --allow-root \
 	--url=${DOMAIN_NAME} --title=${WORDPRESS_TITLE} --admin_user=${WORDPRESS_ADMIN_NAME} --admin_password=${WORDPRESS_ADMIN_PW} --admin_email=${WORDPRESS_ADMIN_EMAIL} --allow-root \
 && wp user create ${WORDPRESS_USER_NAME} ${WORDPRESS_USER_EMAIL} --user_pass=${WORDPRESS_USER_PW} --allow-root
 
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
 exec php-fpm7.4 -F
