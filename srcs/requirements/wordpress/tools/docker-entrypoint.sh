@@ -14,15 +14,10 @@ fi
 wp core download --version=6.4.2 --path=/var/www/html --allow-root \
 && wp config create \
     --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_USER} --dbpass=${MYSQL_PASSWORD} --dbhost=${MYSQL_HOST} --allow-root \
-# config 파일 설정
-# admin page에 ssl을 사용해 접근
 && wp config set FORCE_SSL_ADMIN true --raw --allow-root \
-# site url 설정
 && wp config set WP_HOME https://${DOMAIN_NAME}/ --allow-root \
 && wp config set WP_SITEURL https://${DOMAIN_NAME}/ --allow-root \
-# wordpress가 사용할 수 있는 메모리 제한 설정(default보다 증가)
 && wp config set WP_MEMORY_LIMIT 128M --allow-root \
-# ftp서버를 통하지 않고 wordpress 업데이트를 받을 수 있도록 수정
 && wp config set FS_METHOD direct --allow-root \
 && wp core install \
 	--url=${DOMAIN_NAME} --title=${WORDPRESS_TITLE} --admin_user=${WORDPRESS_ADMIN_NAME} --admin_password=${WORDPRESS_ADMIN_PW} --admin_email=${WORDPRESS_ADMIN_EMAIL} --allow-root \
