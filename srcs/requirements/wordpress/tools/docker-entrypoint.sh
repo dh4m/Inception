@@ -13,7 +13,7 @@ fi
 # wordpress 설치
 wp core download --version=6.4.2 --path=/var/www/html --allow-root \
 && wp config create \
-    --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_USER} --dbpass=${MYSQL_PASSWORD} --dbhost=${MYSQL_HOST} --allow-root \
+    --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_USER} --dbpass=${MYSQL_PASSWORD} --dbhost=${MYSQL_HOST}:${MYSQL_TCP_PORT} --allow-root \
 && wp config set FORCE_SSL_ADMIN true --raw --allow-root \
 && wp config set WP_HOME https://${DOMAIN_NAME}/ --allow-root \
 && wp config set WP_SITEURL https://${DOMAIN_NAME}/ --allow-root \
